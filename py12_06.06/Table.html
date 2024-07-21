@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sortable Table</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dynamic Table from Sorted Objects</h1>
+    <div id="tableContainer"></div>
+    <script>
+        const persons = [
+            { name: "Иван", age: 17 },
+            { name: "Мария", age: 35 },
+            { name: "Алексей", age: 73 },
+            { name: "Яков", age: 12 },
+        ];
+
+        function sort(arr, key, ascending = true) {
+            return arr.sort((a, b) => {
+                if (a[key] < b[key]) {
+                    return ascending ? -1 : 1;
+                }
+                if (a[key] > b[key]) {
+                    return ascending ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+
+        function displaySortedTable(arr, key, ascending = true) {
+            const sortedArray = [...arr];
+            sort(sortedArray, key, ascending);
+
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const tbody = document.createElement('tbody');
+
+            const headerRow = document.createElement('tr');
+            Object.keys(sortedArray[0]).forEach(field => {
+                const th = document.createElement('th');
+                th.textContent = field;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+
+            sortedArray.forEach(item => {
+                const row = document.createElement('tr');
+                Object.values(item).forEach(value => {
+                    const td = document.createElement('td');
+                    td.textContent = value;
+                    row.appendChild(td);
+                });
+                tbody.appendChild(row);
+            });
+
+            table.appendChild(thead);
+            table.appendChild(tbody);
+
+            const tableContainer = document.getElementById('tableContainer');
+            tableContainer.innerHTML = ''; 
+            tableContainer.appendChild(table);
+        }
+
+        displaySortedTable(persons, 'age', true);
+    </script>
+</body>
+</html>
